@@ -57,7 +57,7 @@ let mylongin = async () => {
 
     await provider.send("eth_requestAccounts", [])
     let userAddress = await signer.getAddress()
-    let GetResp = await simpleAjax(userAddress, 'GET', '/api/userNonce')
+    let GetResp = await simpleAjax(userAddress, 'GET', '/userNonce')
     let userTrackingAddress = GetResp.TrackingAddress
     let userWalletTag = GetResp.WalletTag
     let userEmailAddress = GetResp.EmailAddress
@@ -70,7 +70,7 @@ let mylongin = async () => {
     obj1.sig = rawSignature;
     let data = JSON.stringify(obj1)
     // console.log(data)
-    let PostResp = await simpleAjax(data, 'POST', '/api/login')
+    let PostResp = await simpleAjax(data, 'POST', '/login')
     // console.log(PostResp)
     if (PostResp.Authenticated === true)  
     {
@@ -78,7 +78,7 @@ let mylongin = async () => {
       sessionStorage.setItem('userTrackingAddr',JSON.stringify(userTrackingAddress))
       sessionStorage.setItem('userWalletTag',JSON.stringify(userWalletTag))
       sessionStorage.setItem('userEmailAddr',JSON.stringify(userEmailAddress))
-      window.location.href='/api/content' 
+      window.location.href='/content' 
     }
 }
 
