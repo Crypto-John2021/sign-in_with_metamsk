@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="module" src="../../static/lib/mylib.js"></script>
+  <style>
+  * {
+    box-sizing: border-box;
+  }
+  .login {
+    background-color: #fff;
+    width: 500px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 50px 100px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .login-title {
+    font-size: 26px;
+    text-align: center;
+  }
+  .login-item {
+    margin-bottom: 15px;
+  }
+  #sign-in-btn {
+    width: 100%;
+    background-color: #1a9af5;
+    border: none;
+    color: #fff;
+    padding: 6px 0;
+    border-radius: 4px;
+    margin-top: 15px;
+  }
+  </style>
+</head>
+<body>
+  <div class="login">
+    <h3 class="login-title">Login with MetaMask</h3>          
+    <div class="login-item">
+      <input type="button" value="Click Me" id="sign-in-btn">
+    </div>
+</div>
+
+
+</body>
+</html>
+

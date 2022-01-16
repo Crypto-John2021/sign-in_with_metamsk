@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>content</title>
+    <style>
+        .layui-input-inlinemm{
+            position: relative;
+            width: 190px;
+            margin-left: 132px;
+        }
+    </style>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/style/admin.css" media="all">
+</head>
+<body>
+
+<style>
+    .layui-progress{margin: 20px 0;}
+</style>
+
+<div class="layui-fluid" id="Unfinished-projects">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body layui-row layui-col-space10">
+                    <div class="layui-col-md12" wid100="1500">
+                        <form class="layui-form" action="" lay-filter="surv-title">
+                            <label class="">Address 1: </label>
+                            <div class="layui-input-inline" style="width: 370px">
+                                <input type="text" id="input-link1" name="add1" required lay-verify="required" placeholder="please input eth address" autocomplete="off" class="layui-input">
+                            </div>
+                            <label class="">Tag 1: </label>
+                            <div class="layui-input-inline" style="width: 180px">
+                                <input type="text" id="input-sub1" name="sub1" required lay-verify="required" placeholder="please input tag name" autocomplete="off" class="layui-input">
+                            </div>                                
+                            <br>
+                            <label class="">Address 2: </label>
+                            <div class="layui-input-inline" style="width: 370px">
+                                <input type="text" id="input-link2" width="1000" name="add2" required lay-verify="required" placeholder="please input eth address" autocomplete="off" class="layui-input">
+                            </div>
+                            <label class="">Tag 2: </label>
+                            <div class="layui-input-inline" style="width: 180px">
+                                <input type="text" id="input-sub2" name="sub2" required lay-verify="required" placeholder="please input tag name" autocomplete="off" class="layui-input">
+                            </div>
+                            <br>
+                            <label class="">Notification email: </label>
+                            <div class="layui-input-inline" style="width: 370px">
+                                <input type="text" id="input-email" name="eml" required lay-verify="required|email" placeholder="please input notification email" autocomplete="off" class="layui-input">
+                            </div>
+                            <div align="right">
+                                <button type="button" class="layui-btn" lay-submit="" id="test-add0" lay-filter="message">添加</button>
+                                <!--<button type="button" class="layui-btn" id="test-upload-type1"><i class="layui-icon"></i>上传文件</button>-->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script src="../../static/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../static/' 
+    }).extend({
+        index: 'lib/index' 
+    }).use(['index','upload','table','form'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,element = layui.element
+            ,router = layui.router()
+            ,upload = layui.upload
+            ,table =layui.table
+            ,form =layui.form
+            ,$ =layui.$
+            ,admin =layui.admin;
+
+        var token;
+        
+        $(function (){
+            var toke=sessionStorage.getItem("token");
+            token =JSON.parse(toke)
+            console.log(token)
+        })
+    
+        form.render();
+
+        let inputLink1 = document.querySelector('#input-link1') 
+        let inputLink2 = document.querySelector('#input-link2')
+        let inputSub1 = document.querySelector('#input-sub1') 
+        let inputSub2 = document.querySelector('#input-sub2')   
+        let inputEml = document.querySelector('#input-email') 
+        let checkBtn = document.querySelector('#test-add0')
+        let addr = sessionStorage.getItem('userTrackingAddr')
+        let sub = sessionStorage.getItem('userWalletTag')
+        let eml = sessionStorage.getItem('userEmailAddr')
+        if(addr === "" || "'") {
+            inputLink1.value = ""
+            inputLink2.value = ""
+        } else {
+            inputLink1.value = addr.split(',')[0].slice(1)
+            inputLink2.value = addr.split(',')[1].slice(0,-1)
+        }
+        if(sub === "" || "'") {
+            inputSub1.value = ""
+            inputSub2.value = ""
+        } else {
+            inputSub1.value = sub.split(',')[0].slice(1)
+            inputSub2.value = sub.split(',')[1].slice(0,-1)
+        }
+        if(eml === "" || "'") {
+            inputEml.value = ""
+        } else {
+            inputEml.value = eml.slice(1,-1)
+        }
+        
+        // eth地址校验
+        let pattern = /^0x[0-9a-fA-F]{40}$/
+        checkBtn.addEventListener('click', function() {
+            if(!pattern.test(inputLink1.value)) {
+                alert ("Wrong Address1 !")
+                
+            }
+            else if(!pattern.test(inputLink2.value)) {
+                alert ("Wrong Address2 !")
+            } 
+            else {
+                form.on('submit(message)', function(obj){
+                    var articleForm =obj.field;
+                   
+                    console.log(articleForm)
+                    $.ajax({
+                        type:"POST",
+                        url:'/content',
+                        data:articleForm,
+                        headers:{
+                           
+                            "Authorization": token
+                        },
+                        success:function(data){  
+                            if (data.code==1){
+                                alert(data.msg)
+                                window.location.href='/login' 
+                            }else {
+                                alert(data.msg)
+                                
+                            }
+                            
+                        },
+                        error:function(XMLHttpRequest,textStatus,errorThrown){
+                            alert("Error!");
+                            window.location.href='/login';
+                            
+                            console.log(XMLHttpRequest.status);
+                           
+                            console.log(XMLHttpRequest.readyState);
+                           
+                            console.log(textStatus)
+
+                        }
+                    });
+                    return false;
+                });
+            }
+        })
+    });
+
+
+</script>
+
+</body>
+</html> 
